@@ -55,7 +55,7 @@ def run(parameter_1,
 
     time.sleep(random.uniform(0.0, 0.05))
 
-    with open(os.path.join('output.txt'), 'w') as output_file:
+    with open('output.txt', 'w') as output_file:
         output_file.write(str(random.uniform(0.0, 1.0)))
 
     # Tells sacred to save the output file, also allows adding metadata, a descriptive name, etc.
