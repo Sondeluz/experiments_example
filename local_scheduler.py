@@ -10,6 +10,11 @@ from itertools import product
 from concurrent.futures import ThreadPoolExecutor
 
 # Experiment details and parameters to be set before execution
+# Full paths are used for better clarity and to allow running the executable
+# from a different directory
+EXECUTABLE_WORKING_DIRECTORY = "executable"
+EXECUTABLE_PATH = "/home/sam/Documents/Estudios/Doctorado/retreats/1/examples/experiments_example/executable/executable.py"
+
 EXPERIMENT_ID = f"{datetime.now().strftime('%Y_%m_%d_%H_%M_%S')}"  # Or something else
 
 EXPERIMENT_DESCRIPTION = """
@@ -19,7 +24,7 @@ EXPERIMENT_DESCRIPTION = """
     ...
 """
 
-EXPERIMENT_PATH = f"./experiments/{EXPERIMENT_ID}/"
+EXPERIMENT_PATH = f"/home/sam/Documents/Estudios/Doctorado/retreats/1/examples/experiments_example/experiments/{EXPERIMENT_ID}/"
 
 # We could also write it manually and avoid doing it from here
 # if it is too complex. In that case, the script would look for
@@ -73,7 +78,8 @@ def run_and_log_executable(input_parameters, output_dir):
         # Turn all params into strings so that we can call the executable via CLI
         input_parameters = [str(param) for param in input_parameters]
         # Call the process asynchronously so that we can grab its PID
-        process = subprocess.Popen(["python", "executable/executable.py"] + list(input_parameters) + [output_dir + "/raw_output/"])
+        process = subprocess.Popen(["python", EXECUTABLE_PATH] + list(input_parameters) + [output_dir + "/raw_output/"], 
+                                   cwd=EXECUTABLE_WORKING_DIRECTORY) # Execute it form its directory, keeps everything cleaner
         # Track it
         future = executor.submit(memory_usage_tracker, process.pid, stop_event)
         # And wait for it
@@ -109,7 +115,7 @@ with open(os.path.join(EXPERIMENT_PATH, "experiment_description.md"), "w") as f:
 #
 # Place it wherever the executable needs it, and also save it
 # to the experiment's folder
-with open('fixed_configuration.json', 'w') as f:
+with open('executable/fixed_configuration.json', 'w') as f:
     json.dump(FIXED_CONFIGURATION, f, indent=4)
 
 with open(os.path.join(EXPERIMENT_PATH, "fixed_configuration.json"), "w") as f:
