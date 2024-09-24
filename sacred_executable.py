@@ -43,11 +43,11 @@ def my_config():
 # A function whose arguments match config variables declared in @ex.config functions, 
 # which can be overriden when calling it
 @ex.capture
-def run(parameter_1, 
-        parameter_2, 
-        parameter_n, 
-        # _log is the one provided by sacred instead of the one from python's libs
-        _log): 
+def run_executable(parameter_1, 
+                   parameter_2, 
+                   parameter_n, 
+                   # _log is the one provided by sacred instead of the one from python's libs
+                   _log): 
     _log.debug('Pommi is debugging')
     _log.info('Pommi wants to inform you of something')
     _log.warning('Pommi wants to warn you about something')
@@ -92,7 +92,7 @@ def main():
         future = executor.submit(memory_usage_tracker, os.getpid(), ex, stop_event)
 
         # Run without parameters! sacred will feed them from the variables spawned by @ex.config functions
-        run()
+        run_executable()
 
         stop_event.set()
         max_memory = future.result()
